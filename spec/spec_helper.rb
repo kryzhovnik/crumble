@@ -1,5 +1,6 @@
 require 'rubygems'
 gem 'rspec'
+require 'uri'
 
 require "#{File.dirname(__FILE__)}/../app/helpers/breadcrumbs_helper"
 require "#{File.dirname(__FILE__)}/../lib/breadcrumb"
