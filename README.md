@@ -5,25 +5,33 @@ It's a tiny combination of a helper and a simple configuration class to make bre
 Installation
 ============
 
-The gem is hosted on gemcutter, so if you haven’t already, add it as a gem source:
+1.  Rails 2.3
 
-    gem sources -a http://gemcutter.org/
+    The gem is hosted on gemcutter, so if you haven’t already, add it as a gem source:
 
-Then install the Formtastic gem (recommended):
+    Then install the Crumble gem (recommended):
 
-    gem install crumble
+        gem install crumble
 
-Alternatively you can also install it as a Rails plugin:
+    Alternatively you can also install it as a Rails plugin:
 
-    script/plugin install git://github.com/mattmatt/crumble.git
+        script/plugin install git://github.com/mattmatt/crumble.git
 
-Requires Rails 2.3.
+    Requires Rails 2.3.
 
-Note: If you have configured Rails to reload all plugins in development mode, then putting your breadcrumbs configuration into an initializer won't work, since the classes, and therefore the breadcrumbs configuration will be unloaded after the request, and not be reloaded before the next one.
+    Note: If you have configured Rails to reload all plugins in development mode, then putting your breadcrumbs configuration into an initializer won't work, since the classes, and therefore the breadcrumbs configuration will be unloaded after the request, and not be reloaded before the next one.
 
-This will cause the problem. Either disable it, or let Rails use the default, which is to not reload plugins.
+    This will cause the problem. Either disable it, or let Rails use the default, which is to not reload plugins.
 
-    config.reload_plugins = true
+        config.reload_plugins = true
+
+2.  Rails 3
+
+    Gemfile:
+
+        source 'http://rubygems.org'
+        # ...
+        gem 'crumble', :require => 'breadcrumb'
 
 Usage
 =====
