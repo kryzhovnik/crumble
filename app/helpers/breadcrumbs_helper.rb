@@ -1,17 +1,23 @@
 module BreadcrumbsHelper
   def crumbs
-    (Breadcrumb.instance.trails || []).each do |trail|
-      if trail.controller.to_sym == params[:controller].to_sym and
-        trail.action.to_sym == params[:action].to_sym
-        next unless trail.condition_met?(self)
-        breadcrumb_trails = calculate_breadcrumb_trail(trail.trail)
-        breadcrumb_trails = breadcrumb_trails.html_safe if breadcrumb_trails.respond_to? :html_safe
-        return breadcrumb_trails
-      end
-    end
-    ""
+    (breadcrumb_trail || []).join(delimiter)
   end
-  
+
+private
+
+  def breadcrumb_trail
+    trail = Breadcrumb.instance.trails.find do |trail|
+      trail.controller.to_sym == params[:controller].to_sym &&
+      trail.action.to_sym == params[:action].to_sym &&
+      trail.condition_met?(self)
+    end
+    calculate_breadcrumb_trail(trail.trail) unless trail.nil?
+  end
+
+  def delimiter
+    Breadcrumb.instance.delimiter
+  end
+
   def calculate_breadcrumb_trail(trail)
     breadcrumb_trail = []
     trail.each do |crummy|
@@ -22,7 +28,7 @@ module BreadcrumbsHelper
         breadcrumb_trail << link_to(eval(%Q{"#{assemble_crumb_title(crumb)}"}), fetch_crumb_url(crumb))
       end
     end
-    breadcrumb_trail.join(Breadcrumb.instance.delimiter)
+    breadcrumb_trail
   end
   
   def fetch_parameterized_crumb_url(crumb)

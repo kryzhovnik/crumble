@@ -7,31 +7,28 @@ Installation
 
 1.  Rails 2.3
 
-    The gem is hosted on gemcutter, so if you haven’t already, add it as a gem source:
+    You can install it as a Rails plugin:
 
-    Then install the Crumble gem (recommended):
+        script/plugin install git://github.com/kryzhovnik/crumble.git
 
-        gem install crumble
+    And then include BreadcrumbsHelper in the ActionView namespace, something like
 
-    Alternatively you can also install it as a Rails plugin:
-
-        script/plugin install git://github.com/mattmatt/crumble.git
-
-    Requires Rails 2.3.
-
-    Note: If you have configured Rails to reload all plugins in development mode, then putting your breadcrumbs configuration into an initializer won't work, since the classes, and therefore the breadcrumbs configuration will be unloaded after the request, and not be reloaded before the next one.
-
-    This will cause the problem. Either disable it, or let Rails use the default, which is to not reload plugins.
-
-        config.reload_plugins = true
+        class ApplicationController < ActionController::Base
+          helper :breadcrumbs
+        end
 
 2.  Rails 3
 
     Gemfile:
 
-        source 'http://rubygems.org'
-        # ...
-        gem 'crumble', :require => 'breadcrumb'
+        gem 'crumble', :git => 'git://github.com/kryzhovnik/crumble.git', :require => 'breadcrumb'
+
+Note: If you have configured Rails to reload all plugins in development mode, then putting your breadcrumbs configuration into an initializer won't work, since the classes, and therefore the breadcrumbs configuration will be unloaded after the request, and not be reloaded before the next one.
+
+This will cause the problem. Either disable it, or let Rails use the default, which is to not reload plugins.
+
+    config.reload_plugins = true
+
 
 Usage
 =====
@@ -144,18 +141,33 @@ Then, in your views, just insert the following:
 
     <%= crumbs %>
 
-Don't forget to include the helper in the affected controllers:
+If your trails reference non-existing crumbs, the plugin will raise an error telling you where in your configuration the illegal reference was made.
 
-    class ApplicationController < ActionController::Base
-        helper :breadcrumbs
+
+You can make your own templating of crumbs. Just redefine method 'crumb' of BreadcrumsHelper, for example:
+
+    module AnotherBreadcrumbsHelper
+      def crumbs
+        list_items = (breadcrumb_trail || []).map{|crumb| "<li>#{crumb}</li>"}.join(delimiter)
+        "<ul>#{list_items}</ul>"
+      end
+    private
+      def delimiter
+        "<li>#{super}</li>"
+      end
     end
 
-If your trails reference non-existing crumbs, the plugin will raise an error telling you where in your configuration the illegal reference was made.
 
 Future
 ======
 
 If you think something's missing, let me know at <meyer@paperplanes.de>, or even better, send patches, including tests.
+
+
+Author of the original code
+===========
+
+Mathias Meyer, http://github.com/mattmatt/crumble/
 
 Contributors
 ===========
