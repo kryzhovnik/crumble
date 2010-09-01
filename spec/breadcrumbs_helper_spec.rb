@@ -1,9 +1,7 @@
 require File.dirname(__FILE__) + '/spec_helper'
 
 require 'active_support'
-require 'action_view/helpers/javascript_helper'
-require 'action_view/helpers/url_helper'
-
+require 'action_view'
 describe BreadcrumbsHelper do
   include ActionView::Helpers::UrlHelper
   include ActionView::Helpers::TagHelper
@@ -399,5 +397,24 @@ describe BreadcrumbsHelper do
         fetch_parameters_recursive({:search => [:q, :country]}).should == {:search => {:q => "google"}}
       end
     end
+
+    describe "when redefine method crumbs" do
+      require File.dirname(__FILE__) + '/../examples/another_breadcrumbs_helper.rb'
+      include AnotherBreadcrumbsHelper
+
+      it "should return another template" do
+        Breadcrumb.configure do
+          trail :accounts, :show, [:profile, :your_account]
+          crumb :profile, "Public Profile", :user_url, :user
+          crumb :your_account, "Your Account", :edit_account_url
+        end
+
+        params[:controller] = 'accounts'
+        params[:action] = 'show'
+        crumbs.should_not == %Q{<a href="http://test.host/f/jonathan">Public Profile</a> / <a href="http://test.host/account/edit">Your Account</a>}
+        crumbs.should == %Q{<ul><li><a href="http://test.host/f/jonathan">Public Profile</a></li><li> / </li><li><a href="http://test.host/account/edit">Your Account</a></li></ul>}
+      end
+    end
+
   end
 end
