@@ -1,3 +1,4 @@
+# encoding: utf-8
 module Crumble
   if defined? Rails::Railtie
     require 'rails'
