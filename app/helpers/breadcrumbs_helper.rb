@@ -24,9 +24,9 @@ private
     trail.each do |crummy|
       crumb = Breadcrumb.instance.crumbs[crummy]
       if not Breadcrumb.instance.last_crumb_linked? and crummy == trail.last
-        breadcrumb_trail << eval(%Q{"#{assemble_crumb_title(crumb)}"})
+        breadcrumb_trail << eval(%Q{%[#{assemble_crumb_title(crumb)}]})
       else
-        breadcrumb_trail << link_to(eval(%Q{"#{assemble_crumb_title(crumb)}"}), fetch_crumb_url(crumb))
+        breadcrumb_trail << link_to(eval(%Q{%[#{assemble_crumb_title(crumb)}]}), fetch_crumb_url(crumb))
       end
     end
     breadcrumb_trail
